@@ -1,0 +1,47 @@
+student@dev:~/PROJ01$ python3 client.py localhost
+INFO:root:Connect to server: localhost on port: 9016
+INFO:root:Message: Your player X
+
+INFO:root:6:---------
+
+- - - 
+- - - 
+- - - 
+Please enter your move on the board: 1
+INFO:root:6:---------
+
+- - - 
+- - - 
+- - - 
+INFO:root:8:X--------
+
+INFO:root:6:X--O-----
+
+X - - 
+O - - 
+- - - 
+Please enter your move on the board: 2\
+INFO:root:6:X--O-----
+
+X - - 
+O - - 
+- - - 
+INFO:root:8:XX-O-----
+
+INFO:root:6:XX-OO----
+
+X X - 
+O O - 
+- - - 
+Please enter your move on the board: 3
+INFO:root:6:XX-OO----
+
+X X - 
+O O - 
+- - - 
+INFO:root:7:XXXOO----X
+
+X X X 
+O O - 
+- - - 
+X Won

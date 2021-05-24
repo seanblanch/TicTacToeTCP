@@ -1,0 +1,32 @@
+student@dev:~/PROJ01$ python3 server.py
+INFO:root:Server is listening on port 9016
+INFO:root:Accepted connection.
+INFO:root:New thread!
+INFO:root:Server is listening on port 9016
+INFO:root:Message: Test
+
+INFO:root:Accepted connection.
+INFO:root:New thread!
+INFO:root:Server is listening on port 9016
+INFO:root:Message: Test
+
+INFO:root:6:1
+
+INFO:root:6:4
+
+INFO:root:6:2\
+
+INFO:root:6:5
+
+INFO:root:6:3
+
+Exception in thread Thread-2:
+Traceback (most recent call last):
+  File "/usr/lib/python3.7/threading.py", line 917, in _bootstrap_inner
+    self.run()
+  File "server.py", line 93, in run
+    serverRecieveMove = self.recv_until(self.csock, b"\n").decode('utf-8')
+  File "server.py", line 142, in recv_until
+    raise EOFError('socket closed')
+EOFError: socket closed
+

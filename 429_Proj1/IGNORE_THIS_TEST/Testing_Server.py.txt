@@ -1,0 +1,16 @@
+student@dev:~/PROJ01$ python3 server.py
+INFO:root:Server is listening on port 9012
+INFO:root:Accepted connection.
+INFO:root:New thread!
+INFO:root:Server is listening on port 9012
+INFO:root:Message: Test
+
+INFO:root:Accepted connection.
+INFO:root:New thread!
+INFO:root:Server is listening on port 9012
+INFO:root:Message: Test
+
+INFO:root:6:1
+
+INFO:root:6:1
+

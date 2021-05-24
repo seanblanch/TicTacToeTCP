@@ -1,0 +1,260 @@
+﻿S. Blanchard
+CSUCI
+February 2021
+
+				TIC TAC TOE TFTP PROTOCOL
+	Summary
+	
+		This document describes the protocol based on the Implementation of the game Tic Tac Toe. This game will allow two players to play a game of Tic Tac Toe over a network. A example of how the game of Tic Tac Toe works can be seen at https://playtictactoe.org/ where you will play against a computer.
+
+	1.Purpose
+
+		Define the syntax and order of messages exchanged by different users on the same network. We will be using the TFTP protocol that runs over UDP to transfer messages by using netascii mode. TFTP works over USP or SOCK_DGRAM. TFTP listens on port 69.
+
+	2.Protocol
+
+		opcode	operation
+		1 		START
+		2 		CONNECT
+		3 		DISCONNECT
+		4 		ERROR
+		5 		VALID
+		6		MOVE
+		7 		END OF GAME
+
+		Values of Fields
+		PLAYERID: A hex number for a player
+		GAMEID: A hex number for a game
+		POSITIONONBOARD: A int value 0-9 that represents play positions on the board
+		X/O: A representation of a player X or O
+		WIN/LOSS/TIE: A representation of a string value that determines if a player has won, loss, or tied
+
+	Client Connecting to Server
+		Client to Server (CONNECT)
+		
+		2 Bytes
+		+------+
+		|OPCODE|
+		+------+ 
+
+	Server creates game ID
+		Server to client (CONNECT)
+
+		2 bytes string hex #
+		+-----------------+
+		|OPCODE|CTS|GAMEID|
+		+-----------------+
+
+	
+Client to server gets game ID
+		Client to server (CONNECT)
+
+		2 bytes string hex #
+		+-----------------+
+		|OPCODE|CTS|GAMEID|
+		+-----------------+	
+
+Server accepts game ID
+		Server to client (ACCEPT)
+		
+		2 Bytes
+		+------+
+		|OPCODE|
+		+------+ 
+
+	
+	Client Requesting to Start Game
+		Client to server (START)
+
+		2 bytes  Hex #
+		+--------------+
+		|OPCODE|GAMEID |
+		+--------------+
+
+	Server Responding to Start Game
+		Server to client (START)
+		
+		2 bytes  Hex #
+		+--------------+
+		|OPCODE|GAMEID |
+		+--------------+
+
+Server starts game and assigns player
+		Server to client randomly assigns player (CONNECT)
+
+		2 bytes  Hex #  Hex #  string
+		+--------------------------+
+		|OPCODE|GAMEID|PLAYERID|X/O|
+		+--------------------------+
+
+	Server figures out whose turn it is
+		Server to client (MOVE)
+
+ 		2 bytes  Hex #   Hex #       int(0-9)
+ 		+--------------------------------------+
+ 		|OPCODE|GAMEID|PLAYERID|POSITIONONBOARD|
+ 		+--------------------------------------+
+
+	Client Requests a move
+		Client to server (MOVE)
+
+ 		2 bytes  Hex #   Hex #       int(0-9)
+ 		+--------------------------------------+
+ 		|OPCODE|GAMEID|PLAYERID|POSITIONONBOARD|
+ 		+--------------------------------------+
+
+	Server checks move
+		Server checks if it is a ERROR or VALID move (ERROR / VALID)
+ 		2 bytes  Hex #   Hex #       int(0-9)
+ 		+--------------------------------------+
+ 		|OPCODE|GAMEID|PLAYERID|POSITIONONBOARD|
+ 		+--------------------------------------+
+
+	Server sending updates of movement
+		Server to client (MOVE)
+
+		2 bytes   Hex #   Hex #       int(0-9)
+ 		+--------------------------------------+
+ 		|OPCODE|GAMEID|PLAYERID|POSITIONONBOARD|
+ 		+--------------------------------------+
+
+	
+
+	Client Disconnects from Game
+		If a player disconnects from the game (DISCONNECT)
+
+		2 bytes  Hex #   Hex #
+		+----------------------+
+		|OPCODE|GAMEID|PLAYERID|
+		+----------------------+
+	
+	Server responds to client disconnect
+		If client disconnects from game (DISCONNECT)
+
+		2 bytes  Hex #   Hex #
+		+----------------------+
+		|OPCODE|GAMEID|PLAYERID|
+		+----------------------+
+
+	Client Disconnects from Server
+		If a player disconnects from the server (DISCONNECT)
+
+		2 bytes  Hex #
+		+--------------+
+		|OPCODE|GAMEID |
+		+--------------+
+
+
+	Server Responds from disconnect from Server
+		If Client disconnect from the server (DISCONNECT)
+
+		2 bytes  Hex #
+		+--------------+
+		|OPCODE|GAMEID |
+		+--------------+
+
+	Server Disconnects from Client
+		If the Server disconnects from client (DISCONNECT)
+
+		2 bytes  Hex #
+		+--------------+
+		|OPCODE|GAMEID |
+		+--------------+
+
+	Game End
+		Choose winner, loser, or if tie (END OF GAME)
+		 2 bytes  Hex #   Hex #    string
+ 		+-----------------------------------+
+ 		|OPCODE|GAMEID|PLAYERID|WIN/LOSS/TIE|
+ 		+-----------------------------------+	
+
+	Server Disconnects 
+		After game ends (DISCONNECT)
+		2 bytes  Hex #   Hex #
+		+----------------------+
+		|OPCODE|GAMEID|PLAYERID|
+		+----------------------+
+		
+
+	3.Examples
+		     +   +
+		     |   |
+		   1 | 2 | 3
+		     |   |
+		+-------------+
+		     |   |
+		   4 | 5 | 6
+		     |   |
+		+-------------+
+		     |   |
+		   7 | 8 | 9
+		     |   |
+		     +   +
+
+	Value Positions 
+	Of Tic Tac Toe
+	Board.
+
+	Player 1 Connect to server
+	GameID created
+	Client Message		Server Message
+	2				
+						2:CTS:0D8
+	2:CTS:0D8
+						4
+
+	Player 1 Requests to Start Game, 
+	Gets assigned a playerID 
+	and assigns X to Player 1
+	Client Message		Server Message
+	1:0D8
+						1:0D8
+						2:0D8:029A:X
+
+	Player 2 Connects to Server and gets game ID
+	Client Message		Server Message
+	2
+						2:CTS:0D8
+	2:CTS:0D8
+
+	Player 2 Requests to Start Game,
+	Gets assigned a playerID
+	And assigned 0 to Player 2
+	Client Message		Server Message
+	1:0D8
+						1:0D8
+						1:0D8:0378:0
+
+	Server figures out whose turn it is
+	Player 1 (X) has first move
+	Player 1 (X) lays down his first move on 5
+	Client Message		Server Message
+						6:0D8:029A:0
+	6:0D8:029A:3
+						5:0D8:029A:3
+
+	Server Figures out whose turn it is
+	Player 2 (0) has next move
+	Player 2 (0) tries to move to position 5 but is ERROR
+	Player 2 (0) Moves to position 9 VALID
+	Client Message		Server Message
+						6:0D8:0378:5
+	6:0D8:0378:5
+						4:0D8:0378:5
+	6:0D8:0378:9
+						5:0D8:0378:9
+	If Player 2 (0) makes a winning move on position 6
+	Client Message		Server Message
+						6:0D8:0378:2
+	6:0D8:0378:6
+						5:0D8:0378:6
+						7:0D8:0378:WIN
+						3:0D8:0378
+
+	What Player 1 (X) loser views
+	Client Message		Server Message
+						6:0D8:0378:6
+						7:0D8:029A:LOSS
+						3:0D8:029A
+
+

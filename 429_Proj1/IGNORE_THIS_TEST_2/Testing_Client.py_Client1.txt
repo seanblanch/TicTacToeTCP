@@ -1,0 +1,18 @@
+student@dev:~/PROJ01$ python3 client.py localhost
+INFO:root:Connect to server: localhost on port: 9011
+INFO:root:Message: Your player X
+
+INFO:root:6:---------
+
+- - - 
+- - - 
+- - - 
+Please enter your move on the board: 1
+INFO:root:8:X--------
+
+X - - 
+- - - 
+- - - 
+INFO:root:6:X---O----
+
+ERROR: Invalid move
